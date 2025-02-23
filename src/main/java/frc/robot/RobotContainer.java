@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+import java.nio.file.OpenOption;
+
 import swervelib.SwerveInputStream;
 import frc.robot.subsystems.Solenoid.SolenoidSubsystem;
 
@@ -147,6 +149,7 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
+      operatorXbox.a().onTrue(Commands.runOnce(drivebase::zeroGyro));
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       driverXbox.b().whileTrue(
