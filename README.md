@@ -1,7 +1,7 @@
 # 10317_FRC_Rookie_Code
 This code is only a test code and made public to allow us to ask other FRC teams and mentors for help and guidance. Please note that most of the code does not work.
 
-Pulbic - to allow help from any FRC teams and mentors.
+Public - to allow help from any FRC teams and mentors.
 
 The original structure and code is from https://docs.yagsl.com/
 source code: https://github.com/BroncBotz3481/YAGSL-Example/tree/main/src/main
