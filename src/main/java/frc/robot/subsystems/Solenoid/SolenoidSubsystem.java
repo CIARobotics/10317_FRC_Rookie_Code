@@ -14,7 +14,7 @@ public class SolenoidSubsystem extends TimedRobot {
     private final Solenoid m_solenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
     private final DoubleSolenoid m_doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 1, 2);
 
-    private final int revPHCanID = 2; // Replace 2 with your actual CAN ID
+    private final int revPHCanID = 2; // CAN ID 2
     private final Compressor m_compressor = new Compressor(revPHCanID, PneumaticsModuleType.REVPH);
 
     static final int kSolenoidButton = 1;

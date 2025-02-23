@@ -1,27 +1,115 @@
-# 10317_FRC_Rookie_Code
-This code is only a test code and made public to allow us to ask other FRC teams and mentors for help and guidance. Please note that most of the code does not work.
+# Yet Another Generic Swerve Library (YAGSL) Example project
 
-Public - to allow help from any FRC teams and mentors.
+YAGSL is intended to be an easy implementation of a generic swerve drive that should work for most
+square swerve drives. The project is documented
+on [here](https://github.com/BroncBotz3481/YAGSL/wiki). The JSON documentation can also be
+found [here](docs/START.md)
 
-The original structure and code is from https://docs.yagsl.com/
-source code: https://github.com/BroncBotz3481/YAGSL-Example/tree/main/src/main
-Steps from their website were followed to tune our swerve drive for our specific build and design.
+This example is intended to be a starting place on how to use YAGSL. By no means is this intended to
+be the base of your robot project. YAGSL provides an easy way to generate a SwerveDrive which can be
+used in both TimedRobot and Command-Based Robot templates.
 
-Code we have changed (as suggested from their website):
-src/main/java/frc/robot/subsystems/swervedrive/SwerveSubsystem.java
-src/main/deploy/swerve/neo/modules
 
-The swerve drive portion of the code is working. More tuning and testing is needed to dial in for our robot.
+# Overview
 
-We have been trying to integrate other templates into this code to allow for a second controller to operate motors via a button press or toggle. We are also trying to add the pneumatic system as well for buttons to control both single and double solenoid, as well as initiate the compressor. We created two "subsytems" as follows:
+### Installation
 
-src/main/java/frc/robot/subsystems/Mechanism/MechanismSubsystem.java
-src/main/java/frc/robot/subsystems/Solenoid/SolenoidSubsystem.java
+Vendor URL:
 
-The code for the above java files where templates from the FRC WpiLib resources: https://docs.wpilib.org/en/stable/docs/software/examples-tutorials/wpilib-examples.html
+```
+https://broncbotz3481.github.io/YAGSL-Lib/yagsl/yagsl.json
+```
 
-As a rookie team, we really do not know what we are doing. We do not have the ability to code from scratch, but are trying to add code and test, modify and test, etc. to see what the code is doing. (reverse engineering our code and trying to merge template code)
+[Javadocs here](https://broncbotz3481.github.io/YAGSL/)  
+[Library here](https://github.com/BroncBotz3481/YAGSL/)  
+[Code here](https://github.com/BroncBotz3481/YAGSL/tree/main/swervelib)  
+[WIKI](https://github.com/BroncBotz3481/YAGSL/wiki)  
+[Config Generation](https://broncbotz3481.github.io/YAGSL-Example/)
 
-The original template for the yagsl swerve drive is so advanced and large, we really do not know how to add the simpler mechanisms, solendoid, and future autonomous code. Where the code should go and is referenced is beyond our ability at this time.
+# Create an issue if there is any errors you find!
 
-We greatly appreciate any and all help for those that like to code and provide guidance. We truly thank you in advance for your help.
+We will be actively montoring this and fix any issues when we can!
+
+## Development
+
+* Development happens here on `YAGSL-Example`. `YAGSL` and `YAGSL-Lib` are updated on a nightly
+  basis.
+
+# Support our developers!
+<a href='https://ko-fi.com/yagsl' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Robot at ko-fi.com'></a>
+
+### TL;DR Generate and download your configuration [here](https://broncbotz3481.github.io/YAGSL-Example/) and unzip it so that it follows structure below:
+
+```text
+deploy
+└── swerve
+    ├── controllerproperties.json
+    ├── modules
+    │   ├── backleft.json
+    │   ├── backright.json
+    │   ├── frontleft.json
+    │   ├── frontright.json
+    │   ├── physicalproperties.json
+    │   └── pidfproperties.json
+    └── swervedrive.json
+```
+
+### Then create your SwerveDrive object like this.
+
+```java
+import java.io.File;
+import edu.wpi.first.wpilibj.Filesystem;
+import swervelib.parser.SwerveParser;
+import swervelib.SwerveDrive;
+import edu.wpi.first.math.util.Units;
+
+
+SwerveDrive swerveDrive=new SwerveParser(new File(Filesystem.getDeployDirectory(),"swerve")).createSwerveDrive(Units.feetToMeters(14.5));
+```
+
+# Migrating Old Configuration Files
+
+1. Delete `wheelDiamter`, `gearRatio`, `encoderPulsePerRotation` from `physicalproperties.json`
+2. Add `optimalVoltage` to `physicalproperties.json`
+3. Delete `maxSpeed` and `optimalVoltage` from `swervedrive.json`
+4. **IF** a swerve module doesn't have the same drive motor or steering motor as the rest of the
+   swerve drive you **MUST** specify a `conversionFactor` for BOTH the drive and steering motor in
+   the modules configuration JSON file. IF one of the motors is the same as the rest of the swerve
+   drive and you want to use that `conversionFactor`, set the `conversionFactor` in the module JSON
+   configuration to 0.
+5. You MUST specify the maximum speed when creating a `SwerveDrive`
+   through `new SwerveParser(directory).createSwerveDrive(maximumSpeed);`
+6. IF you do not want to set `conversionFactor` in `swervedrive.json`. You can pass it into the
+   constructor as a parameter like this
+
+```java
+double DriveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(WHEEL_DIAMETER), GEAR_RATIO, ENCODER_RESOLUTION);
+double SteeringConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(GEAR_RATIO, ENCODER_RESOLUTION);
+SwerveDrive swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed, SteeringConversionFactor, DriveConversionFactor);
+```
+
+### Falcon Support would not have been possible without support from Team 1466 Webb Robotics!
+
+# Configuration Tips
+
+### My Robot Spins around uncontrollably during autonomous or when attempting to set the heading!
+
+* Invert the gyro scope.
+* Invert the drive motors for every module. (If front and back become reversed when turning)
+
+### Angle motors are erratic.
+
+* Invert the angle motor.
+
+### My robot is heavy.
+
+* Implement momentum velocity limitations in SwerveMath.
+
+### Ensure the IMU is centered on the robot
+
+# Maintainers
+- @thenetworkgrinch
+- @Technologyman00 
+
+# Special Thanks to Team 7900! Trial N' Terror
+Without the debugging and aid of Team 7900 the project could never be as stable or active as it is. 
