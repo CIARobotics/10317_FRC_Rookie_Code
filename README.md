@@ -22,6 +22,6 @@ The code for the above java files where templates from the FRC WpiLib resources:
 
 As a rookie team, we really do not know what we are doing. We do not have the ability to code from scratch, but are trying to add code and test, modify and test, etc. to see what the code is doing. (reverse engineering our code and trying to merge template code)
 
-The original template for the yagsl swerve drive is so advanced and large, we really do not know how to add the simpler mechanisms, solendoid, and future autonomous code. Wherethe code should go and are referenced is beyond our ability at this time.
+The original template for the yagsl swerve drive is so advanced and large, we really do not know how to add the simpler mechanisms, solendoid, and future autonomous code. Where the code should go and is referenced is beyond our ability at this time.
 
-We greatly appreciate any all help for those that like to code and provide guidance. We truly thank you in advance for your help.
+We greatly appreciate any and all help for those that like to code and provide guidance. We truly thank you in advance for your help.
