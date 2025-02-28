@@ -10,13 +10,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Mechanism.MechanismSubsystem;
-import edu.wpi.first.wpilibj.Joystick; // might not need from here down
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkLowLevel.MotorType;//check later
-import frc.robot.subsystems.Solenoid.SolenoidSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
@@ -25,10 +18,6 @@ import frc.robot.subsystems.Solenoid.SolenoidSubsystem;
  */
 public class Robot extends TimedRobot
 {
-    
-    private MechanismSubsystem m_mechanism; // might not need
-  
-
   private static Robot   instance;
   private        Command m_autonomousCommand;
 
