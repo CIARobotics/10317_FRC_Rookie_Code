@@ -16,15 +16,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.CoralSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
+
 import java.io.File;
-import java.nio.file.OpenOption;
 
 import swervelib.SwerveInputStream;
-import frc.robot.subsystems.Solenoid.SolenoidSubsystem;
-
-
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -33,12 +31,11 @@ import frc.robot.subsystems.Solenoid.SolenoidSubsystem;
  */
 public class RobotContainer
 {
-
-  // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
   final         CommandXboxController operatorXbox = new CommandXboxController(1);
   // The robot's subsystems and commands are defined here...
-  private final SolenoidSubsystem solenoidSubsystem = new SolenoidSubsystem();// might not need
+  private final CoralSubsystem coral = new CoralSubsystem();
+  private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
 
@@ -97,10 +94,17 @@ public class RobotContainer
    */
   public RobotContainer()
   {
+    NamedCommands.registerCommand("Feeder", elevator.Feeder());
+    NamedCommands.registerCommand("L1", elevator.L1());
+    NamedCommands.registerCommand("L2", elevator.L2());
+    NamedCommands.registerCommand("L3", elevator.L3());
+    NamedCommands.registerCommand("L4", elevator.L4());
+    NamedCommands.registerCommand("Shoot", coral.onSingle());
+    NamedCommands.registerCommand("Retract", coral.offSingle());
+
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-    NamedCommands.registerCommand("test", Commands.print("I EXIST"));
   }
 
   /**
@@ -151,7 +155,6 @@ public class RobotContainer
     {
       operatorXbox.a().onTrue(Commands.runOnce(drivebase::zeroGyro));
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       driverXbox.b().whileTrue(
           drivebase.driveToPose(
               new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
@@ -161,7 +164,6 @@ public class RobotContainer
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
       driverXbox.a().onTrue(Commands.runOnce(drivebase::zeroGyro));
-      driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       driverXbox.b().whileTrue(
           drivebase.driveToPose(
               new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
@@ -170,7 +172,16 @@ public class RobotContainer
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
-      
+
+      operatorXbox.povUp().onTrue(coral.onSingle());
+      operatorXbox.povDown().onTrue(coral.offSingle());
+      operatorXbox.povLeft().onTrue(coral.forwardDouble());
+      operatorXbox.povRight().onTrue(coral.reverseDouble());
+
+      operatorXbox.y().onTrue(elevator.L4());
+      operatorXbox.x().onTrue(elevator.L3());
+      operatorXbox.b().onTrue(elevator.L2());
+      operatorXbox.a().onTrue(elevator.L1());
     }
 
   }
