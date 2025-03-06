@@ -153,7 +153,7 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      //operatorXbox.a().onTrue(Commands.runOnce(drivebase::zeroGyro));
+      
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.b().whileTrue(
           drivebase.driveToPose(
@@ -205,16 +205,18 @@ operatorXbox.rightBumper().onTrue(Commands.runOnce(() -> {
 
       //only have double soleniods - ended up adding code above to create a toggle
       //for one button peration to allow other buttons to be used elswhere 
+      //code below was just to test the double soleniods
+      // they have been put back to control elevator
       //operatorXbox.y().onTrue(coral.forwardDouble1()); 
       //operatorXbox.x().onTrue(coral.reverseDouble1());
       //operatorXbox.b().onTrue(coral.forwardDouble2());
       //operatorXbox.a().onTrue(coral.reverseDouble2()); 
 
 
-      //operatorXbox.y().onTrue(elevator.L4());
-      //operatorXbox.x().onTrue(elevator.L3());
-      //operatorXbox.b().onTrue(elevator.L2());
-      //operatorXbox.a().onTrue(elevator.L1());
+      operatorXbox.y().onTrue(elevator.L4());
+      operatorXbox.x().onTrue(elevator.L3());
+      operatorXbox.b().onTrue(elevator.L2());
+      operatorXbox.a().onTrue(elevator.L1());
     }
 
   }
