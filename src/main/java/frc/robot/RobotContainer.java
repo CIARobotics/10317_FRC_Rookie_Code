@@ -153,7 +153,7 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      operatorXbox.a().onTrue(Commands.runOnce(drivebase::zeroGyro));
+      //operatorXbox.a().onTrue(Commands.runOnce(drivebase::zeroGyro));
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.b().whileTrue(
           drivebase.driveToPose(
@@ -173,15 +173,48 @@ public class RobotContainer
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
 
-      operatorXbox.povUp().onTrue(coral.onSingle());
-      operatorXbox.povDown().onTrue(coral.offSingle());
-      operatorXbox.povLeft().onTrue(coral.forwardDouble());
-      operatorXbox.povRight().onTrue(coral.reverseDouble());
+      //operatorXbox.povUp().onTrue(coral.onSingle());
+      //operatorXbox.povDown().onTrue(coral.offSingle());
+      //operatorXbox.povLeft().onTrue(coral.forwardDouble());
+      //operatorXbox.povRight().onTrue(coral.reverseDouble());
 
-      operatorXbox.y().onTrue(elevator.L4());
-      operatorXbox.x().onTrue(elevator.L3());
-      operatorXbox.b().onTrue(elevator.L2());
-      operatorXbox.a().onTrue(elevator.L1());
+
+      // Solenoid 1 Toggle (Left Bumper Button)
+      final boolean[] solenoid1State = {false}; // Initialize state to false (reverse)
+
+operatorXbox.leftBumper().onTrue(Commands.runOnce(() -> {
+    solenoid1State[0] = !solenoid1State[0]; // Toggle the state
+
+    if (solenoid1State[0]) {
+        coral.forwardDouble1().schedule(); // If true, go forward
+    } else {
+        coral.reverseDouble1().schedule(); // If false, go reverse
+    }
+}));
+
+      // Solenoid 2 Toggle (Right Bumpetr Button)
+      final boolean[] solenoid2State = {false};
+operatorXbox.rightBumper().onTrue(Commands.runOnce(() -> {
+    solenoid2State[0] = !solenoid2State[0];
+    if (solenoid2State[0]) {
+        coral.forwardDouble2().schedule();
+    } else {
+        coral.reverseDouble2().schedule();
+    }
+}));
+
+      //only have double soleniods - ended up adding code above to create a toggle
+      //for one button peration to allow other buttons to be used elswhere 
+      //operatorXbox.y().onTrue(coral.forwardDouble1()); 
+      //operatorXbox.x().onTrue(coral.reverseDouble1());
+      //operatorXbox.b().onTrue(coral.forwardDouble2());
+      //operatorXbox.a().onTrue(coral.reverseDouble2()); 
+
+
+      //operatorXbox.y().onTrue(elevator.L4());
+      //operatorXbox.x().onTrue(elevator.L3());
+      //operatorXbox.b().onTrue(elevator.L2());
+      //operatorXbox.a().onTrue(elevator.L1());
     }
 
   }

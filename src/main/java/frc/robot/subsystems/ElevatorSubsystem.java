@@ -34,7 +34,10 @@ public class ElevatorSubsystem extends SubsystemBase {
   // Initialize elevator SPARK. We will use MAXMotion position control for the elevator, so we also
   // need to initialize the closed loop controller and encoder.
   private SparkMax elevatorMotor =
-      new SparkMax(33, MotorType.kBrushless);
+      new SparkMax(20, MotorType.kBrushless);
+  //private SPsrkMac elevatorMotor2 = 
+      //new SparkMax(deviceId:21, MotorType.kBrushless);
+      //might not need - set elevatorMotor2 to follower in REV Hardware Client
   private SparkClosedLoopController elevatorClosedLoopController =
       elevatorMotor.getClosedLoopController();
   private RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();

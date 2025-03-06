@@ -17,20 +17,30 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CoralSubsystem extends SubsystemBase {
   private final Solenoid m_solenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
-  private final DoubleSolenoid m_doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 1, 2);
+  private final DoubleSolenoid m_doubleSolenoid1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 1, 2);
+  private final DoubleSolenoid m_doubleSolenoid2 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 14, 15);
 
-  private final int revPHCanID = 2; // CAN ID 2
+  private final int revPHCanID = 1; // CAN ID 1
   private final Compressor m_compressor = new Compressor(revPHCanID, PneumaticsModuleType.REVPH);
+  
+
+
   /** Creates a new Coral. */
   public CoralSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Pneumatics");
     tab.add("Single Solenoid", m_solenoid);
-    tab.add("Double Solenoid", m_doubleSolenoid);
+    tab.add("Double Solenoid", m_doubleSolenoid1);
+    tab.add("Double Solenoid 2", m_doubleSolenoid2);
     tab.add("Compressor", m_compressor);
     tab.addDouble("PH Pressure [PSI]", m_compressor::getPressure);
     tab.addDouble("Compressor Current", m_compressor::getCurrent);
     tab.addBoolean("Compressor Active", m_compressor::isEnabled);
     tab.addBoolean("Pressure Switch", m_compressor::getPressureSwitchValue);
+  }
+
+  {
+    //added due to only having the analog sensor - digital needed for other closed loopm system
+    m_compressor.enableAnalog(70, 120);
   }
 
   // I don't know what you want to call these please rename
@@ -42,11 +52,19 @@ public class CoralSubsystem extends SubsystemBase {
     return Commands.runOnce(() -> m_solenoid.set(false));
   }
 
-  public Command forwardDouble() {
-    return Commands.runOnce(() -> m_doubleSolenoid.set(Value.kForward));
+  public Command forwardDouble1() {
+    return Commands.runOnce(() -> m_doubleSolenoid1.set(Value.kForward));
   }
 
-  public Command reverseDouble() {
-    return Commands.runOnce(() -> m_doubleSolenoid.set(Value.kReverse));
+  public Command reverseDouble1() {
+    return Commands.runOnce(() -> m_doubleSolenoid1.set(Value.kReverse));
+  }
+
+  public Command forwardDouble2() {
+    return Commands.runOnce(() -> m_doubleSolenoid2.set(Value.kForward));
+  }
+
+  public Command reverseDouble2() {
+    return Commands.runOnce(() -> m_doubleSolenoid2.set(Value.kReverse));
   }
 }
