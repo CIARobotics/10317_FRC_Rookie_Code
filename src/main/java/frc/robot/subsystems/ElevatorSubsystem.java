@@ -68,7 +68,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control
-        .p(0.1)
+        .p(0.08)
 .outputRange(-1, 1)
 .maxMotion
 // Set MAXMotion parameters for position control
