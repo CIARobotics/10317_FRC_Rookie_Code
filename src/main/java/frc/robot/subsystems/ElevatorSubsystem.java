@@ -16,6 +16,7 @@ import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -68,12 +69,12 @@ public class ElevatorSubsystem extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control
         .p(0.1)
-        .outputRange(-1, 1)
-        .maxMotion
-        // Set MAXMotion parameters for position control
-        .maxVelocity(4200)
-        .maxAcceleration(6000)
-        .allowedClosedLoopError(0.5);
+.outputRange(-1, 1)
+.maxMotion
+// Set MAXMotion parameters for position control
+.maxVelocity(4200)
+.maxAcceleration(6000)
+.allowedClosedLoopError(0.5);
 
     elevatorMotor.configure(elevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     elevatorEncoder.setPosition(0);
@@ -82,6 +83,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Coral/Elevator/Target Position", elevatorCurrentTarget);
+    SmartDashboard.putNumber("Coral/Elevator/Actual Position", elevatorEncoder.getPosition());
   }
 
   public Command L4() {
@@ -100,12 +103,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     return Commands.runOnce(() -> moveToSetpoint(ElevatorSetpoints.kLevel1));
   }
 
-  public Command Feeder() {
-    return Commands.runOnce(() -> moveToSetpoint(ElevatorSetpoints.kFeederStation));
+ public Command Feeder() {
+   return Commands.runOnce(() -> moveToSetpoint(ElevatorSetpoints.kFeederStation));
   }
 
-  private void moveToSetpoint(double target) {
+  private void moveToSetpoint(int target) {
     elevatorClosedLoopController.setReference(
-        elevatorCurrentTarget, ControlType.kMAXMotionPositionControl);
+        target, ControlType.kMAXMotionPositionControl);
   }
 }

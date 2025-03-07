@@ -179,29 +179,35 @@ public class RobotContainer
       //operatorXbox.povRight().onTrue(coral.reverseDouble());
 
 
-      // Solenoid 1 Toggle (Left Bumper Button)
+      operatorXbox.start().onTrue(elevator.L4());
+      operatorXbox.y().onTrue(elevator.L3());
+      operatorXbox.x().onTrue(elevator.L2());
+      operatorXbox.b().onTrue(elevator.L1());
+      operatorXbox.a().onTrue(elevator.Feeder());
+
+  //      Solenoid 1 Toggle (Left Bumper Button)
       final boolean[] solenoid1State = {false}; // Initialize state to false (reverse)
 
-operatorXbox.leftBumper().onTrue(Commands.runOnce(() -> {
-    solenoid1State[0] = !solenoid1State[0]; // Toggle the state
+      operatorXbox.leftBumper().onTrue(Commands.runOnce(() -> {
+      solenoid1State[0] = !solenoid1State[0]; // Toggle the state
 
-    if (solenoid1State[0]) {
-        coral.forwardDouble1().schedule(); // If true, go forward
+      if (solenoid1State[0]) {
+      coral.forwardDouble1().schedule(); // If true, go forward
     } else {
-        coral.reverseDouble1().schedule(); // If false, go reverse
+      coral.reverseDouble1().schedule(); // If false, go reverse
     }
-}));
+  }));
 
-      // Solenoid 2 Toggle (Right Bumpetr Button)
+       //Solenoid 2 Toggle (Right Bumpetr Button)
       final boolean[] solenoid2State = {false};
-operatorXbox.rightBumper().onTrue(Commands.runOnce(() -> {
+    operatorXbox.rightBumper().onTrue(Commands.runOnce(() -> {
     solenoid2State[0] = !solenoid2State[0];
     if (solenoid2State[0]) {
         coral.forwardDouble2().schedule();
     } else {
         coral.reverseDouble2().schedule();
     }
-}));
+  }));
 
       //only have double soleniods - ended up adding code above to create a toggle
       //for one button peration to allow other buttons to be used elswhere 
@@ -213,10 +219,7 @@ operatorXbox.rightBumper().onTrue(Commands.runOnce(() -> {
       //operatorXbox.a().onTrue(coral.reverseDouble2()); 
 
 
-      operatorXbox.y().onTrue(elevator.L4());
-      operatorXbox.x().onTrue(elevator.L3());
-      operatorXbox.b().onTrue(elevator.L2());
-      operatorXbox.a().onTrue(elevator.L1());
+
     }
 
   }
