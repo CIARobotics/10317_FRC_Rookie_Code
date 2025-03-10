@@ -19,7 +19,7 @@ public class CoralSubsystem extends SubsystemBase {
   private final Solenoid m_solenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
   private final DoubleSolenoid m_doubleSolenoid1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 1, 2);
   private final DoubleSolenoid m_doubleSolenoid2 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 14, 15);
-
+  private final DoubleSolenoid m_doubleSolenoid3 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 10, 11);
   private final int revPHCanID = 1; // CAN ID 1
   private final Compressor m_compressor = new Compressor(revPHCanID, PneumaticsModuleType.REVPH);
   
@@ -31,6 +31,7 @@ public class CoralSubsystem extends SubsystemBase {
     tab.add("Single Solenoid", m_solenoid);
     tab.add("Double Solenoid", m_doubleSolenoid1);
     tab.add("Double Solenoid 2", m_doubleSolenoid2);
+    //tab.add(title:"Double Solenoid 3", m_doubleSolenoid3);
     tab.add("Compressor", m_compressor);
     tab.addDouble("PH Pressure [PSI]", m_compressor::getPressure);
     tab.addDouble("Compressor Current", m_compressor::getCurrent);
@@ -66,5 +67,13 @@ public class CoralSubsystem extends SubsystemBase {
 
   public Command reverseDouble2() {
     return Commands.runOnce(() -> m_doubleSolenoid2.set(Value.kReverse));
+  }
+
+  public Command forwardDouble3() {
+    return Commands.runOnce(() -> m_doubleSolenoid3.set(Value.kForward));
+  }
+
+  public Command reverseDouble3() {
+    return Commands.runOnce(() -> m_doubleSolenoid3.set(Value.kReverse));
   }
 }

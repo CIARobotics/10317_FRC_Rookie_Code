@@ -5,6 +5,9 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,6 +26,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import java.io.File;
 
 import swervelib.SwerveInputStream;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -43,12 +47,12 @@ public class RobotContainer
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> driverXbox.getLeftY() * 1,
-                                                                () -> driverXbox.getLeftX() * 1)
-                                                            .withControllerRotationAxis(() -> driverXbox.getRightX() * -1)
-                                                            .deadband(OperatorConstants.DEADBAND)
-                                                            .scaleTranslation(0.8)
-                                                            .allianceRelativeControl(true);
+                                                                  () -> Math.pow(driverXbox.getLeftY(), 3),
+                                                                  () -> Math.pow(driverXbox.getLeftX(), 3))
+                                                              .withControllerRotationAxis(() -> driverXbox.getRightX() * -1)
+                                                              .deadband(OperatorConstants.DEADBAND)
+                                                              .scaleTranslation(0.8)
+                                                              .allianceRelativeControl(true);
 
   /**
    * Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
@@ -94,6 +98,11 @@ public class RobotContainer
    */
   public RobotContainer()
   {
+
+      UsbCamera camera = CameraServer.startAutomaticCapture();
+        camera.setResolution(320, 240); // Optional: Adjust resolution
+        camera.setFPS(15); //Optional: Adjust FPS
+
     NamedCommands.registerCommand("Feeder", elevator.Feeder());
     NamedCommands.registerCommand("L1", elevator.L1());
     NamedCommands.registerCommand("L2", elevator.L2());
@@ -209,6 +218,17 @@ public class RobotContainer
     }
   }));
 
+
+  //Solenoid 3 Toggle (Right Bumpetr Button)
+  final boolean[] solenoid3State = {false};
+  driverXbox.rightBumper().onTrue(Commands.runOnce(() -> {
+  solenoid3State[0] = !solenoid3State[0];
+  if (solenoid3State[0]) {
+      coral.forwardDouble3().schedule();
+  } else {
+      coral.reverseDouble3().schedule();
+  }
+}));
       //only have double soleniods - ended up adding code above to create a toggle
       //for one button peration to allow other buttons to be used elswhere 
       //code below was just to test the double soleniods
