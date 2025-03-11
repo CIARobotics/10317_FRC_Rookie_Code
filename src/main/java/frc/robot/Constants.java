@@ -50,10 +50,10 @@ public final class Constants
   }
 
   public static final class ElevatorSetpoints {
-    public static final int kFeederStation = 5;
-    public static final int kLevel1 = 35;
-    public static final int kLevel2 = 70;
-    public static final int kLevel3 = 100;
-    public static final int kLevel4 = 145;
+    public static final int kFeederStation = 5;//A - 1st coral
+    public static final int kLevel1 = 70;//B - 2nd coral 
+    public static final int kLevel2 = 162;//X - 3rd coral
+    public static final int kLevel3 = 35;//feeder station
+    public static final int kLevel4 = 0;//start button home
   }
 }
