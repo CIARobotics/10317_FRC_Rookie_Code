@@ -15,6 +15,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,6 +24,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorSetpoints;
 
 public class ElevatorSubsystem extends SubsystemBase {
+
+    
+
   /** Subsystem-wide setpoints */
   public enum Setpoint {
     kFeederStation,
@@ -111,4 +115,24 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorClosedLoopController.setReference(
         target, ControlType.kMAXMotionPositionControl);
   }
+
+  
+// 775 Pro Motor and PWM Spark
+private PWMSparkMax motor775Pro = new PWMSparkMax(1);
+
+
+  // 775 Pro Motor Control
+  private void set775ProMotor(double speed) {
+      motor775Pro.set(speed);
+  }
+
+  public Command control775ProMotor(java.util.function.DoubleSupplier speedSupplier) {
+      return Commands.run(() -> set775ProMotor(speedSupplier.getAsDouble()));
+  }
+
+  public Command stop775ProMotor() {
+      return Commands.runOnce(() -> set775ProMotor(0.0));
+  }
+
+  
 }

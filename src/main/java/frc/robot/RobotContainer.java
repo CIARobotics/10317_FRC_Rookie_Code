@@ -239,6 +239,25 @@ public class RobotContainer
       //operatorXbox.a().onTrue(coral.reverseDouble2()); 
 
 
+    // Variable 775 Pro Motor Speed Control with Operator Xbox Y
+    new Trigger(() -> Math.abs(operatorXbox.getLeftY()) > 0.1)
+        .whileTrue(elevator.control775ProMotor(operatorXbox::getLeftY))
+        .whileFalse(elevator.stop775ProMotor());
+
+    // Variable 775 Pro Motor Speed Control with Operator Xbox Y and Dead Zone
+    double deadZone = 0.1; // Adjust this value as needed
+
+    new Trigger(() -> Math.abs(operatorXbox.getLeftY()) > deadZone)
+        .whileTrue(elevator.control775ProMotor(() -> {
+            double yAxis = operatorXbox.getLeftY();
+            if (Math.abs(yAxis) < deadZone) {
+                return 0.0; // Inside dead zone, return 0
+            } else {
+                return yAxis; // Outside dead zone, return the axis value
+            }
+        }))
+        .whileFalse(elevator.stop775ProMotor());
+
 
     }
 
