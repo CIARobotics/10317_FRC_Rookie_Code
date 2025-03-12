@@ -16,6 +16,7 @@ import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,7 +26,10 @@ import frc.robot.Constants.ElevatorSetpoints;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-    
+     // Limit Switch
+     private DigitalInput lowerLimitSwitch = new DigitalInput(1);
+     private DigitalInput upperLimitSwitch = new DigitalInput(2); 
+
 
   /** Subsystem-wide setpoints */
   public enum Setpoint {
@@ -87,8 +91,25 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Upper Limit Switch", upperLimitSwitch.get());
+    SmartDashboard.putBoolean("Lower Limit Switch", lowerLimitSwitch.get());
     SmartDashboard.putNumber("Coral/Elevator/Target Position", elevatorCurrentTarget);
     SmartDashboard.putNumber("Coral/Elevator/Actual Position", elevatorEncoder.getPosition());
+  }
+
+  public Command controlElevatorManual(java.util.function.DoubleSupplier speedSupplier) {
+    return Commands.run(() -> {
+        double speed = speedSupplier.getAsDouble();
+        if (!lowerLimitSwitch.get() && speed < 0) {
+            elevatorMotor.set(0);
+            elevatorEncoder.setPosition(0);
+        } else if (!upperLimitSwitch.get() && speed > 0) { // Check top limit switch
+            elevatorMotor.set(0); // Stop if top limit switch is triggered and moving up
+            elevatorEncoder.setPosition(162);
+        } else {
+            elevatorMotor.set(speed);
+        }
+    });
   }
 
   public Command L4() {
@@ -133,6 +154,12 @@ private PWMSparkMax motor775Pro = new PWMSparkMax(1);
   public Command stop775ProMotor() {
       return Commands.runOnce(() -> set775ProMotor(0.0));
   }
+
+
+//Add this method
+public Command stopElevatorManual() {
+    return Commands.runOnce(() -> elevatorMotor.set(0.0));
+}
 
   
 }

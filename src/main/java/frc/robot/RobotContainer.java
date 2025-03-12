@@ -209,7 +209,7 @@ public class RobotContainer
 
        //Solenoid 2 Toggle (Right Bumpetr Button)
       final boolean[] solenoid2State = {false};
-    operatorXbox.rightBumper().onTrue(Commands.runOnce(() -> {
+    driverXbox.rightBumper().onTrue(Commands.runOnce(() -> {
     solenoid2State[0] = !solenoid2State[0];
     if (solenoid2State[0]) {
         coral.forwardDouble2().schedule();
@@ -221,7 +221,7 @@ public class RobotContainer
 
   //Solenoid 3 Toggle (Right Bumpetr Button)
   final boolean[] solenoid3State = {false};
-  driverXbox.rightBumper().onTrue(Commands.runOnce(() -> {
+  operatorXbox.back().onTrue(Commands.runOnce(() -> {
   solenoid3State[0] = !solenoid3State[0];
   if (solenoid3State[0]) {
       coral.forwardDouble3().schedule();
@@ -239,17 +239,32 @@ public class RobotContainer
       //operatorXbox.a().onTrue(coral.reverseDouble2()); 
 
 
+      // Operator Left Y-Axis Control for Elevator
+      double elevatorDeadZone = 0.1; // Adjust this value as needed
+
+      new Trigger(() -> Math.abs(operatorXbox.getLeftY()) > elevatorDeadZone)
+              .whileTrue(elevator.controlElevatorManual(() -> {
+                  double yAxis = operatorXbox.getLeftY();
+                  if (Math.abs(yAxis) < elevatorDeadZone) {
+                      return 0.0;
+                  } else {
+                      return yAxis * -1;
+                  }
+              }))
+              .whileFalse(elevator.stopElevatorManual());
+
+
     // Variable 775 Pro Motor Speed Control with Operator Xbox Y
-    new Trigger(() -> Math.abs(operatorXbox.getLeftY()) > 0.1)
-        .whileTrue(elevator.control775ProMotor(operatorXbox::getLeftY))
+    new Trigger(() -> Math.abs(operatorXbox.getRightY()) > 0.1)
+        .whileTrue(elevator.control775ProMotor(operatorXbox::getRightY))
         .whileFalse(elevator.stop775ProMotor());
 
     // Variable 775 Pro Motor Speed Control with Operator Xbox Y and Dead Zone
     double deadZone = 0.1; // Adjust this value as needed
 
-    new Trigger(() -> Math.abs(operatorXbox.getLeftY()) > deadZone)
+    new Trigger(() -> Math.abs(operatorXbox.getRightY()) > deadZone)
         .whileTrue(elevator.control775ProMotor(() -> {
-            double yAxis = operatorXbox.getLeftY();
+            double yAxis = operatorXbox.getRightY();
             if (Math.abs(yAxis) < deadZone) {
                 return 0.0; // Inside dead zone, return 0
             } else {
